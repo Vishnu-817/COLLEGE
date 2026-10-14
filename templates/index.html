@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123d35">
+  <meta name="description" content="Find your people, your purpose, and your next big idea at Summit College. Explore programs, campus life, and how to apply.">
+  <title>Summit College — Make your mark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="announcement">
+    <span>Applications for Fall 2027 are open</span>
+    <a href="#admissions">Find your next step <span aria-hidden="true">↗</span></a>
+  </div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Summit College home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name">SUMMIT<span>COLLEGE</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation">
+      <span></span><span></span>
+    </button>
+    <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+      <a href="#academics">Academics</a>
+      <a href="#experience">Campus life</a>
+      <a href="#stories">Stories</a>
+      <a href="#admissions">Admissions</a>
+      <a class="nav-apply" href="#admissions">Apply now <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack" aria-live="polite" aria-atomic="true">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}" role="status">
+              <span>{{ message }}</span><button type="button" aria-label="Dismiss message">×</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="hero" id="home">
+      <div class="hero-image" role="img" aria-label="Students walking through a leafy college campus"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <p class="eyebrow light-eyebrow"><span></span> A college for what's next</p>
+        <h1>Curiosity takes<br>you <em>places.</em></h1>
+        <p class="hero-copy">A close-knit community. A world of possibility. Come find what you’re capable of at Summit.</p>
+        <div class="hero-actions">
+          <a class="button button-lime" href="#academics">Explore programs <span aria-hidden="true">↗</span></a>
+          <a class="text-link light-link" href="#experience">Get to know us <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-note"><span class="note-line"></span><span>LEARN HERE.<br>GO ANYWHERE.</span></div>
+      <a class="hero-scroll" href="#welcome" aria-label="Scroll to discover"><span></span> SCROLL TO DISCOVER</a>
+    </section>
+
+    <section class="welcome section-pad" id="welcome">
+      <div class="welcome-label"><span class="eyebrow">A little room to grow</span><span class="section-index">01 / 04</span></div>
+      <div class="welcome-main">
+        <h2>Big ideas begin<br>with <em>belonging.</em></h2>
+        <div class="welcome-aside">
+          <p>At Summit, you’re more than a face in a lecture hall. You’ll be known, challenged, and encouraged to follow the questions that matter to you.</p>
+          <a class="text-link" href="#experience">Meet your new community <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="stats" aria-label="Summit College at a glance">
+        <div class="stat"><strong>12<span>:1</span></strong><span>student-to-faculty ratio</span></div>
+        <div class="stat"><strong>40<span>+</span></strong><span>areas of study</span></div>
+        <div class="stat"><strong>85<span>%</span></strong><span>students receive aid</span></div>
+        <div class="stat"><strong>1<span>°</span></strong><span>of connection, always</span></div>
+      </div>
+    </section>
+
+    <section class="academics section-pad" id="academics">
+      <div class="section-heading">
+        <div><p class="eyebrow">Learn what moves you</p><h2>Find your <em>field.</em></h2></div>
+        <p>Start with what you love. Leave with the skills to do something meaningful with it.</p>
+      </div>
+      <div class="program-tools">
+        <label class="search-wrap">
+          <span class="sr-only">Search programs</span>
+          <span aria-hidden="true">⌕</span>
+          <input id="program-search" type="search" placeholder="Search programs..." autocomplete="off">
+        </label>
+        <div class="filter-group" role="group" aria-label="Filter programs by degree level">
+          <button class="filter-button active" type="button" data-level="all" aria-pressed="true">All programs</button>
+          <button class="filter-button" type="button" data-level="Undergraduate" aria-pressed="false">Undergraduate</button>
+          <button class="filter-button" type="button" data-level="Graduate" aria-pressed="false">Graduate</button>
+        </div>
+      </div>
+      <div class="program-grid" id="program-grid" aria-live="polite">
+        {% for program in programs %}
+        <article class="program-card" data-program="{{ program.name|lower }} {{ program.school|lower }} {{ program.level|lower }} {{ program.description|lower }}" data-level="{{ program.level }}">
+          <div class="program-card-top"><span class="program-icon" aria-hidden="true">{{ program.icon }}</span><span class="program-arrow" aria-hidden="true">↗</span></div>
+          <p class="program-school">{{ program.school }}</p>
+          <h3>{{ program.name }}</h3>
+          <p class="program-description">{{ program.description }}</p>
+          <div class="program-meta"><span>{{ program.level }}</span><span>{{ program.duration }}</span></div>
+          <a class="card-link" href="#admissions" aria-label="Explore {{ program.name }} and start an application">Explore program <span aria-hidden="true">↗</span></a>
+        </article>
+        {% endfor %}
+        <p class="no-results" id="no-results" hidden>No programs match that search. Try another name or degree level.</p>
+      </div>
+      <div class="program-footer"><span>Not sure where to start?</span><a class="text-link" href="#contact">Talk with an advisor <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section class="experience" id="experience">
+      <div class="experience-photo" role="img" aria-label="Friends laughing together outdoors on campus"></div>
+      <div class="experience-content">
+        <p class="eyebrow light-eyebrow">More than a place to study</p>
+        <h2>Find your<br>kind of <em>people.</em></h2>
+        <p>Try the thing you’ve always wanted to try. Find your people at a club meeting. Make a favorite place your own. Life here is yours to shape.</p>
+        <a class="button button-outline-light" href="#stories">See what life here feels like <span aria-hidden="true">↗</span></a>
+        <div class="experience-caption"><span>01 — 03</span><span>Good things grow together.</span></div>
+      </div>
+    </section>
+
+    <section class="admissions section-pad" id="admissions">
+      <div class="admissions-intro">
+        <p class="eyebrow">Your next chapter starts here</p>
+        <h2>Ready when<br><em>you are.</em></h2>
+        <p>There’s no one kind of Summit student. Tell us a little about yourself and our admissions team will help you take the next step.</p>
+      </div>
+      <div class="admissions-side">
+        <div class="admission-step"><span class="step-number">01</span><div><h3>Get to know us</h3><p>Meet the people, ask your questions, and picture your place here.</p><a href="#contact">Connect with admissions <span aria-hidden="true">↗</span></a></div></div>
+        <div class="admission-step"><span class="step-number">02</span><div><h3>Find your program</h3><p>Explore the subjects you love and the possibilities you haven’t met yet.</p><a href="#academics">Browse areas of study <span aria-hidden="true">↗</span></a></div></div>
+        <div class="admission-step"><span class="step-number">03</span><div><h3>Start a conversation</h3><p>Share your interests. We’ll help you find the best way forward.</p><a href="#admissions-form">Request information <span aria-hidden="true">↗</span></a></div></div>
+      </div>
+      <form class="inquiry-form" id="admissions-form" action="{{ url_for('apply') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-heading"><div><p class="eyebrow">A good first step</p><h3>Let's start a conversation.</h3></div><span aria-hidden="true">✳</span></div>
+        <div class="form-row">
+          <label>Your name<input name="full_name" type="text" autocomplete="name" maxlength="120" placeholder="First and last name" required></label>
+          <label>Email address<input name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></label>
+        </div>
+        <div class="form-row">
+          <label>Area of interest<select name="program" required><option value="" disabled selected>Choose a program</option>{% for program in programs %}<option value="{{ program.name }}">{{ program.name }}</option>{% endfor %}</select></label>
+          <label>Entry term<select name="term" required><option value="" disabled selected>Choose a term</option><option>Fall 2027</option><option>Spring 2028</option></select></label>
+        </div>
+        <label>Phone number <span class="optional-label">(optional)</span><input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="(555) 000-0000"></label>
+        <button class="button button-dark form-submit" type="submit">Request information <span aria-hidden="true">↗</span></button>
+        <p class="privacy-note">By submitting, you agree that Summit College may contact you about your interests. Your information stays with us.</p>
+      </form>
+    </section>
+
+    <section class="stories section-pad" id="stories">
+      <div class="section-heading story-heading">
+        <div><p class="eyebrow">A few stories from here</p><h2>Life, in <em>progress.</em></h2></div>
+        <a class="text-link" href="#contact">More from Summit <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="story-grid">
+        <article class="story-card story-feature">
+          <div class="story-image story-image-one" role="img" aria-label="Students collaborating at a library table"></div>
+          <div class="story-meta"><span>STUDENT SPOTLIGHT</span><span>5 MIN READ</span></div>
+          <h3>One small question. One very big idea.</h3>
+          <p>How a first-year project became a community effort to make campus life more sustainable.</p>
+          <a href="#contact" aria-label="Read the story: One small question. One very big idea">Read the story <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="story-card">
+          <div class="story-image story-image-two" role="img" aria-label="A student presenting an idea to classmates"></div>
+          <div class="story-meta"><span>LEARNING BY DOING</span><span>4 MIN READ</span></div>
+          <h3>Classroom ideas, out in the world.</h3>
+          <p>Our students learn best by getting involved in the work that matters.</p>
+          <a href="#contact" aria-label="Read the story: Classroom ideas, out in the world">Read the story <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="story-card">
+          <div class="story-image story-image-three" role="img" aria-label="Students enjoying the green campus quad"></div>
+          <div class="story-meta"><span>AROUND CAMPUS</span><span>3 MIN READ</span></div>
+          <h3>On finding your people at Summit.</h3>
+          <p>Clubs, late-night conversations, and the little moments that feel like home.</p>
+          <a href="#contact" aria-label="Read the story: On finding your people at Summit">Read the story <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="faq section-pad" id="faq">
+      <div class="faq-heading"><p class="eyebrow">Good questions</p><h2>Wondering<br>about <em>something?</em></h2><a class="text-link" href="#contact">Ask us anything <span aria-hidden="true">↗</span></a></div>
+      <div class="faq-list">
+        <details><summary>What makes Summit College different?<span aria-hidden="true">+</span></summary><p>Small classes, accessible faculty, and a close-knit campus make it easier to find support and get involved. You’ll learn across disciplines, apply what you know, and build a path that feels like your own.</p></details>
+        <details><summary>How do I apply for financial aid?<span aria-hidden="true">+</span></summary><p>Once you apply for admission, our financial aid team can guide you through the FAFSA and Summit scholarship opportunities. About 85% of our students receive some form of financial aid.</p></details>
+        <details><summary>Can I visit campus before applying?<span aria-hidden="true">+</span></summary><p>Absolutely. Reach out through our contact form and our admissions team will help you plan a campus visit, meet students, and sit in on a class when available.</p></details>
+        <details><summary>When should I apply for Fall 2027?<span aria-hidden="true">+</span></summary><p>Applications are open now. Request information above to connect with an admissions counselor who can walk you through deadlines and the application process.</p></details>
+      </div>
+    </section>
+
+    <section class="newsletter" id="newsletter">
+      <div><p class="eyebrow light-eyebrow">A little Summit in your inbox</p><h2>Stay curious.</h2><p>Get campus stories, upcoming events, and important dates — no noise, just the good stuff.</p></div>
+      <form action="{{ url_for('newsletter') }}" method="post" class="newsletter-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label class="sr-only" for="newsletter-email">Your email address</label>
+        <input id="newsletter-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="Your email address" required>
+        <button type="submit" aria-label="Subscribe to the Summit College newsletter">Count me in <span aria-hidden="true">↗</span></button>
+        <p>You can unsubscribe anytime. We respect your inbox.</p>
+      </form>
+    </section>
+
+    <section class="contact section-pad" id="contact">
+      <div class="contact-intro"><p class="eyebrow">Real people, good answers</p><h2>We're here<br>for <em>you.</em></h2><p>Whether you’re planning a visit or figuring out financial aid, we’re happy to help you sort it out.</p><div class="contact-detail"><span>ADMISSIONS OFFICE</span><a href="mailto:admissions@summit.example">admissions@summit.example</a><a href="tel:+15550142000">(555) 014-2000</a></div></div>
+      <form class="contact-form" action="{{ url_for('contact') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <h3>Send us a note.</h3>
+        <div class="form-row"><label>Your name<input name="full_name" type="text" autocomplete="name" maxlength="120" required></label><label>Email address<input name="email" type="email" autocomplete="email" maxlength="254" required></label></div>
+        <label>What can we help with?<input name="subject" type="text" maxlength="160" required></label>
+        <label>Your message<textarea name="message" rows="4" maxlength="5000" required></textarea></label>
+        <button class="button button-dark" type="submit">Send your message <span aria-hidden="true">↗</span></button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-top"><a class="brand footer-brand" href="#home"><span class="brand-mark" aria-hidden="true">S</span><span class="brand-name">SUMMIT<span>COLLEGE</span></span></a><p>Learn here. Go anywhere.</p><a href="#home" class="back-top">Back to top ↑</a></div>
+    <div class="footer-bottom"><span>© {{ year }} Summit College. Made for what’s next.</span><span>Riverbend, USA · <a href="mailto:hello@summit.example">Say hello</a></span><span><a href="#contact">Privacy</a> &nbsp; <a href="#contact">Accessibility</a></span></div>
+  </footer>
+</body>
+</html>
