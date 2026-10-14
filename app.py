@@ -4,6 +4,7 @@ import os
 import re
 import secrets
 import sqlite3
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -28,7 +29,12 @@ VALID_TERMS = {"Fall 2027", "Spring 2028"}
 
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(
+        __name__,
+        static_folder="public/static",
+        static_url_path="/static",
+        instance_relative_config=True,
+    )
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY") or secrets.token_hex(32),
         DATABASE_URL=os.getenv("DATABASE_URL", "").strip(),
@@ -45,10 +51,22 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
     if not app.config["DATABASE_PATH"]:
-        app.config["DATABASE_PATH"] = str(Path(app.instance_path) / "college.db")
-    initialize_database(app)
+        if os.getenv("VERCEL"):
+            app.config["DATABASE_PATH"] = str(Path(tempfile.gettempdir()) / "college.db")
+        else:
+            Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+            app.config["DATABASE_PATH"] = str(Path(app.instance_path) / "college.db")
+    try:
+        initialize_database(app)
+        app.extensions["college_database_initialized"] = True
+    except Exception:
+        if not os.getenv("VERCEL"):
+            raise
+        app.extensions["college_database_initialized"] = False
+        app.logger.exception(
+            "Database initialization failed on Vercel; database-backed forms will retry when submitted"
+        )
 
     @app.before_request
     def protect_forms():
@@ -194,6 +212,9 @@ def initialize_database(app):
 
 
 def execute(app, query, parameters):
+    if not app.extensions.get("college_database_initialized", False):
+        initialize_database(app)
+        app.extensions["college_database_initialized"] = True
     connection, postgres = connect_database(app)
     if postgres:
         query = query.replace("?", "%s")
